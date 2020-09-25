@@ -1,0 +1,32 @@
+name: Heroku Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ test ]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HEROKU_ACCOUNT: ${{ secrets.HEROKU_ACCOUNT }}
+  HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+  V2_ID: ${{ secrets.V2_ID }}
+  V2_PATH: ${{ secrets.V2_PATH }}
+  ALTER_ID: ${{ secrets.ALTER_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install heroku cli 1
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sudo sh
+      - name: install heroku cli 2
+        run: |
+          sudo rm -rf ~/.local/share/heroku && sudo rm -rf ~/.cache/heroku
+      - uses: actions/checkout@v2
+      - name: Deploy
+        run: |
+          ./deploy_heroku.sh
